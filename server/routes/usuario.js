@@ -2,11 +2,17 @@ const express = require('express');
 const bcrypt = require('bcrypt'); //se utiliza par encryptar las contraseñas
 const _ = require('underscore'); //lo utilizamos para validar los datos que envia el usuario y que es lo que puede modificar
 const Usuario = require('../models/usuario'); //llamamos al modelo usuario, donde esta la logica de la BD
-
+const { verificaToken, verificaAdminRole } = require('../middlewares/autenticacion'); //llamamos al middleware
 const app = express();
 
+//el segundo parametro es un middleware
+app.get('/usuario', verificaToken, (req, res) => {
 
-app.get('/usuario', function(req, res) {
+    return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email,
+    })
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -37,7 +43,7 @@ app.get('/usuario', function(req, res) {
     // res.json('get Usuario');
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdminRole], (req, res) => {
 
     let body = req.body;
     //creamos un nuevo usuario, mandandole los datos mediante la instancia del modelo
@@ -78,7 +84,7 @@ app.post('/usuario', function(req, res) {
 });
 
 //los dos puntos indican que es un valor que sera ingresado por el usuario
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
 
     //de esta manera llamamos a los parametros
     let id = req.params.id;
@@ -107,7 +113,7 @@ app.put('/usuario/:id', function(req, res) {
 
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdminRole], (req, res) => {
     let id = req.params.id;
 
     // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
