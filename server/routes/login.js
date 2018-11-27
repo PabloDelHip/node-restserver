@@ -154,5 +154,11 @@ app.post('/google', async(req, res) => {
     });
 });
 
+app.post('/prueba', (req, res) => {
+    return res.json({
+        ok: 'todo salio bien',
+    });
+});
+
 
 module.exports = app;
