@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Google Sing in Demo</title>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="971255176217-an54a4jbrfccimv7i5u6ttamdbc4dko5.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="971255176217-gtbjjblji7tjcs9l60rltfelm9frfjm6.apps.googleusercontent.com">
 </head>
 
 <body>
@@ -39,7 +39,7 @@
 
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/prueba');
+            xhr.open('POST', '/google');
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onload = function() {
                 console.log('Signed in as: ' + xhr.responseText);
