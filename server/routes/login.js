@@ -83,7 +83,7 @@ app.post('/google', async(req, res) => {
         .catch(e => {
             return res.status(403).json({
                 ok: false,
-                err: e
+                err: 'token invalido'
             });
         });
 
@@ -149,9 +149,9 @@ app.post('/google', async(req, res) => {
 
     //}
     //});
-    res.json({
-        usuario: googleUser
-    });
+    // res.json({
+    //     usuario: googleUser
+    // });
 });
 
 
