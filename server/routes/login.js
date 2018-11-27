@@ -87,7 +87,7 @@ app.post('/google', async(req, res) => {
     //         });
     //     });
 
-    Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
+    Usuario.findOne({ email: 'pablodelhip2@gmail.com' }, (err, usuarioDB) => {
         if (err) {
             //si hay algun error entra aqui y retorna el error con el status
             return res.status(500).json({
