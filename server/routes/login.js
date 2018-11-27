@@ -58,100 +58,100 @@ app.post('/login', (req, res) => {
 });
 
 //configuraciones de google
-async function verify(token) {
-    const ticket = await client.verifyIdToken({
-        idToken: token,
-        audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
-        // Or, if multiple clients access the backend:
-        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-    });
-    const payload = ticket.getPayload();
+// async function verify(token) {
+//     const ticket = await client.verifyIdToken({
+//         idToken: token,
+//         audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+//         // Or, if multiple clients access the backend:
+//         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+//     });
+//     const payload = ticket.getPayload();
 
-    return {
-        nombre: payload.name,
-        email: payload.email,
-        img: payload.picture,
-        google: true
-    }
-}
+//     return {
+//         nombre: payload.name,
+//         email: payload.email,
+//         img: payload.picture,
+//         google: true
+//     }
+// }
 //verify().catch(console.error);
 
 app.post('/google', async(req, res) => {
     let token = req.body.idtoken;
-    console.log('soy el token' + token);
-    let googleUser = await verify(token)
-        .catch(e => {
-            return res.status(403).json({
-                ok: false,
-                err: 'token invalido'
-            });
-        });
 
-    //Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
-    //     if (err) {
-    //         //si hay algun error entra aqui y retorna el error con el status
-    //         return res.status(500).json({
+    // let googleUser = await verify(token)
+    //     .catch(e => {
+    //         return res.status(403).json({
     //             ok: false,
-    //             err
+    //             err: token
     //         });
-    //     };
+    //     });
 
-    //     if (usuarioDB) {
-    //         if (usuarioDB.google === false) {
-    //             return res.status(500).json({
-    //                 ok: false,
-    //                 err: {
-    //                     message: 'Debe de usar su autentucación normal'
-    //                 }
-    //             });
-    //         } else {
-    //             //generamos el token del usuario aqui
-    //             //se pasa la info del usuario,
-    //             //nuestra llave que esta declarada en el archivo config y la fecha de expiracion que esta en el mismo archivo
-    //             let token = jwt.sign({
-    //                 usuario: usuarioDB
-    //             }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
-    //             return res.json({
-    //                 ok: true,
-    //                 usuario: usuarioDB,
-    //                 token
-    //             });
-    //         }
-    //     } else {
-    //         //si el usuario no existe en nuestra base de datos
-    //         let usuario = new Usuario();
+    Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
+        if (err) {
+            //si hay algun error entra aqui y retorna el error con el status
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        };
 
-    //         usuario.nombre = googleUser.nombre;
-    //         usuario.email = googleUser.email;
-    //         usuario.img = googleUser.img;
-    //         usuario.google = true;
-    //         usuario.password = ':)';
+        if (usuarioDB) {
+            if (usuarioDB.google === false) {
+                return res.status(500).json({
+                    ok: false,
+                    err: {
+                        message: 'Debe de usar su autentucación normal'
+                    }
+                });
+            } else {
+                //generamos el token del usuario aqui
+                //se pasa la info del usuario,
+                //nuestra llave que esta declarada en el archivo config y la fecha de expiracion que esta en el mismo archivo
+                let token = jwt.sign({
+                    usuario: usuarioDB
+                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
+                return res.json({
+                    ok: true,
+                    usuario: usuarioDB,
+                    token
+                });
+            }
+        } else {
+            //si el usuario no existe en nuestra base de datos
+            let usuario = new Usuario();
 
-    //         usuario.save((err, usuarioDB) => {
-    //             if (err) {
-    //                 //si hay algun error entra aqui y retorna el error con el status
-    //                 return res.status(500).json({
-    //                     ok: false,
-    //                     err
-    //                 });
-    //             };
+            usuario.nombre = googleUser.nombre;
+            usuario.email = googleUser.email;
+            usuario.img = googleUser.img;
+            usuario.google = true;
+            usuario.password = ':)';
 
-    //             let token = jwt.sign({
-    //                 usuario: usuarioDB
-    //             }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
-    //             return res.json({
-    //                 ok: true,
-    //                 usuario: usuarioDB,
-    //                 token
-    //             });
-    //         });
+            usuario.save((err, usuarioDB) => {
+                if (err) {
+                    //si hay algun error entra aqui y retorna el error con el status
+                    return res.status(500).json({
+                        ok: false,
+                        err
+                    });
+                };
+
+                let token = jwt.sign({
+                    usuario: usuarioDB
+                }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
+                return res.json({
+                    ok: true,
+                    usuario: usuarioDB,
+                    token
+                });
+            });
 
 
-    //}
-    //});
-    // res.json({
-    //     usuario: googleUser
-    // });
+        }
+    });
+    res.json({
+        usuario: googleUser
+    });
 });
 
 
