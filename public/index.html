@@ -36,11 +36,9 @@
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/google');
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            //xhr.setRequestHeader('Content-Type', 'text/plain; charset="utf-8"');
             xhr.onload = function() {
                 console.log('Signed in as: ' + xhr.responseText);
             };
-            console.log(xhr.response);
             xhr.send('idtoken=' + id_token);
 
         }
