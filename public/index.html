@@ -40,10 +40,8 @@
             xhr.onload = function() {
                 console.log('Signed in as: ' + xhr.responseText);
             };
-            var token = {
-                'idtoken': id_token
-            }
-            xhr.send(token);
+            console.log(xhr.response);
+            xhr.send('idtoken=' + id_token);
 
         }
     </script>
