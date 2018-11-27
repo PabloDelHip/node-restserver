@@ -58,36 +58,36 @@ app.post('/login', (req, res) => {
 });
 
 //configuraciones de google
-// async function verify(token) {
-//     const ticket = await client.verifyIdToken({
-//         idToken: token,
-//         audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
-//         // Or, if multiple clients access the backend:
-//         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-//     });
-//     const payload = ticket.getPayload();
+async function verify(token) {
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+    });
+    const payload = ticket.getPayload();
 
-//     return {
-//         nombre: payload.name,
-//         email: payload.email,
-//         img: payload.picture,
-//         google: true
-//     }
-// }
+    return {
+        nombre: payload.name,
+        email: payload.email,
+        img: payload.picture,
+        google: true
+    }
+}
 //verify().catch(console.error);
 
 app.post('/google', async(req, res) => {
     let token = req.body.idtoken;
 
-    // let googleUser = await verify(token)
-    //     .catch(e => {
-    //         return res.status(403).json({
-    //             ok: false,
-    //             err: token
-    //         });
-    //     });
+    let googleUser = await verify(token)
+        .catch(e => {
+            return res.status(403).json({
+                ok: false,
+                err: e
+            });
+        });
 
-    Usuario.findOne({ email: 'pablodelhip2@gmail.com' }, (err, usuarioDB) => {
+    Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
         if (err) {
             //si hay algun error entra aqui y retorna el error con el status
             return res.status(500).json({
