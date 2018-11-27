@@ -34,12 +34,13 @@
             var id_token = googleUser.getAuthResponse().id_token;
             console.log(id_token);
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/google');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.open('POST', '/google', true);
+            // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-Type', 'text/plain; charset="utf-8"');
             xhr.onload = function() {
                 console.log('Signed in as: ' + xhr.responseText);
             };
-            // xhr.send('idtoken=' + id_token);
+            xhr.send('idtoken=' + id_token);
 
         }
     </script>
